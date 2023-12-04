@@ -28,7 +28,6 @@ XI_ZERO_MEAN = False
 NUM_BETA_UPDATES = 1
 NUM_XI_UPDATES = 1
 BETA_UB = 6
-num_FW_iterations = 50
 
 PRICE_CHANGE_PERCENT_1 = 1.0
 PRICE_CHANGE_PERCENT_2 = 5.0
@@ -61,4 +60,6 @@ ALGO_VARIANT = 'AltDesc'
 g0 = 0.0
 xi_per = 0.5
 
-
+# Number of iterations to run for the corrosponding algorithms
+num_iterations_IgnoreUF = 50
+num_iterations_AltDesc = 50

@@ -54,7 +54,7 @@ def compute_variables_from_expt_file(file_name, no_purchase_const, xi_bar_in_con
     return observed_ms, prod_feats_offered, W_more, more_instruments
 
 
-def run_nonparametric_estimator(file_name, num_feats):
+def run_nonparametric_estimator():
     n = num_prods
     run_times = dict()
     membership = np.ones((num_markets, n + 1), dtype=np.int)
@@ -81,7 +81,7 @@ def run_nonparametric_estimator(file_name, num_feats):
         fw_blp_est = FrankWolfeMixedLogitBLPEstimator(LIKELIHOOD, 'corrective', 'ignore')
         expt_id_iter = 'Results_no_xi_'+file_name
         
-        fw_blp_est.fit_to_choice_data(membership, prod_feats_offered, observed_ms, gmm_matrix, instruments, W, num_FW_iterations, 0,
+        fw_blp_est.fit_to_choice_data(membership, prod_feats_offered, observed_ms, gmm_matrix, instruments, W, num_iterations_IgnoreUF, 0,
                                       expt_id_iter, init_coefs, init_demand_shocks, init_mix_props)
 
     if ALGO_VARIANT.startswith('AltDesc'):
@@ -100,12 +100,12 @@ def run_nonparametric_estimator(file_name, num_feats):
         expt_id_iter = 'Results_'+file_name+'_G0={0}_xi_per={1}_'.format(g0, xi_per)
         expt_id_iter += id_term
 
-        fw_blp_est.fit_to_choice_data(membership, prod_feats_offered, observed_ms, gmm_matrix, instruments, W, num_FW_iterations, 0,
+        fw_blp_est.fit_to_choice_data(membership, prod_feats_offered, observed_ms, gmm_matrix, instruments, W, num_iterations_AltDesc, 0,
                                         expt_id_iter, init_coefs, init_demand_shocks, init_mix_props)
 
 
 
-def compute_metrics(file_name ):         
+def compute_metrics():         
     train_shares, train_prod_feats_offered, W_more, instruments = compute_variables_from_expt_file(
         file_name, no_purch_const, XI_ZERO_MEAN, num_feats)  
     membership = np.ones((num_markets, num_prods + 1), dtype=np.int)  
@@ -171,9 +171,8 @@ def compute_metrics(file_name ):
     
 
 
-if __name__ == "__main__":
-        
-    run_nonparametric_estimator(file_name, num_feats)
-    price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3 = compute_metrics(file_name)
-    embed()
+if __name__ == "__main__":        
+    run_nonparametric_estimator()
+    price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3 = compute_metrics()
+
 
