@@ -8,7 +8,7 @@ Modify the following variables in the `constants.py` file as required. Refer to 
 `file_path_data`, \
 `file_name`, \
 `num_feats`, \
-`num_markets`, \ 
+`num_markets`, \
 `num_prods`, \
 `ALGO_VARIANT`
 
@@ -26,7 +26,7 @@ Run the file `nonparametric_experiments.py` that contains two functions: `run_no
 ### 1. `run_nonparametric_estimator(file_name, num_feats)`
 This function runs a nonparametric estimator on market data by taking `file_name` and `num_feats` as inputs. It first calls the `compute_variables_from_expt_file` function to process the input data file and generate market shares, product features, and instruments in the required format. 
 
-It then fits a `FrankWolfeMixedLogitBLPEstimator` object for estimation and saves the output in the `file_path_results` directory. The output is a pickle file that contains the estimated random coefficients and their mixing proportions, the unobserved factors (aka demand shokcs), the KL divergence loss and the GMM objective value at the estimated model parameters.
+It then fits a `FrankWolfeMixedLogitBLPEstimator` object for estimation and saves the output in the `file_path_results` directory. The output is a pickle file that contains the estimated random coefficients and their mixing proportions, the unobserved factors (demand shocks in BLP framework), the KL divergence loss and the GMM objective values at the estimated model parameters.
 
 ### 2. `compute_metrics(file_name)`
 This function computes the following post-estimation in-sample and out-of-sample metrics:
