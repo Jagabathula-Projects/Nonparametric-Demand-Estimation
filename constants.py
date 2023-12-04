@@ -3,32 +3,23 @@ import numpy as np
 LIKELIHOOD = 'likelihood'
 QUADRATIC = 'quadratic'
 
-# FRANK-WOLFE MIXTURE LEARNING ALGORITHM CONSTANTS
+# MIXTURE LEARNING ALGORITHM CONSTANTS
 NUM_BFGS_INIT = 20
 NUM_SUBPROB_ITERS = 50
 
-MAX_MSS_ITERS = 1000
-MAX_BS_ITERS = 10
-MAX_CP_ITERS = 30
-
 CORRECTIVE_GAP = 1e-8
 MAX_CORRECTIVE_STEPS = 400
-FOX_BAJARI_GAP = 1e-1
-BB_TOL = 1e-4
-BS_TOL = 1e-6
-
 
 # NORM_TYPE = 'linf'
 NORM_TYPE = 'l2'
 DEMAND_SHOCKS_MAX = 1
 no_purch_const = 0
 
-
 XI_ZERO_MEAN = False
 NUM_BETA_UPDATES = 1
 NUM_XI_UPDATES = 1
-BETA_UB = 6
 
+# OUT-OF-SAMPLE PRICE CHANGES
 PRICE_CHANGE_PERCENT_1 = 1.0
 PRICE_CHANGE_PERCENT_2 = 5.0
 PRICE_CHANGE_PERCENT_3 = 10.0
@@ -40,7 +31,7 @@ file_path_data = ''
 file_path_results = 'Results/'
 # Name of the input csv file. Ensure that the column names in your input file match those in the Sample_data.csv file, and are in the same order.
 file_name = 'Sample_data'
-# Number of features in the utility specification of the model. Columns x_0, x_1, x_2 and so on correspond to the non-price features, and the column prices correspond to the price.
+# Total number of features (including price) in the utility specification of the model. Columns x_0, x_1, x_2 and so on correspond to the non-price features, and the column prices correspond to the price.
 num_feats = 2
 # Total number of markets
 num_markets = 400
@@ -55,11 +46,11 @@ NOPURCHSHOCKS = np.zeros(num_markets)[:, np.newaxis]
 ALGO_VARIANT = 'AltDesc'
 # ALGO_VARIANT = 'IgnoreUF'
 
-# Hyperparameters corrosponding to ALGO_VARIANT = 'AltDesc'  
+# Hyperparameters corresponding to ALGO_VARIANT = 'AltDesc'
 # g0 = 0.0 and xi_per = 0.5 are the default values, but they must be tuned based on the application.
 g0 = 0.0
 xi_per = 0.5
 
-# Number of iterations to run for the corrosponding algorithms
+# Number of iterations to run for the corresponding algorithms
 num_iterations_IgnoreUF = 50
-num_iterations_AltDesc = 50
+num_iterations_AltDesc = 10

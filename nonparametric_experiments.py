@@ -1,16 +1,13 @@
 import sys
 from mixed_logit_estimators import FrankWolfeMixedLogitBLPEstimator
-# from collections import defaultdict
 from constants import *
 import pickle
 from numpy.random import RandomState
 import logging
 from IPython import embed
 import pandas as pd
-from scipy.linalg import eigh, svd, sqrtm
+from scipy.linalg import eigh, svd
 from copy import deepcopy
-import itertools
-
 
 # setup logger environment
 logger = logging.getLogger('Simulations')
@@ -23,7 +20,7 @@ logger.addHandler(handler)
 
 prng = RandomState(1244)
 
-def compute_variables_from_expt_file(file_name, no_purchase_const, xi_bar_in_constraint, num_feats):
+def compute_variables_from_expt_file(file_name, no_purchase_const, num_feats):
     data_df = pd.read_csv(file_path_data + file_name+'.csv')
     observed_ms = data_df['shares'].values.reshape((num_markets, -1))
     nopurch_shares = 1 - np.sum(observed_ms, 1, keepdims=True)
@@ -32,7 +29,7 @@ def compute_variables_from_expt_file(file_name, no_purchase_const, xi_bar_in_con
     prod_feats_offered = []
     N = num_markets * num_prods
     add_constant_instr = int(no_purchase_const > 0)
-    num_total_instr = len(data_df.columns) - 4 + add_constant_instr # 4 corresponds to the first 4 columns like market_id, product_id,  etc.
+    num_total_instr = len(data_df.columns) - 4 + add_constant_instr #  everything except first 4 columns market_ids, product_ids, shares and prices.
     more_instruments = np.ones((N, num_total_instr))
     num_zs = more_instruments.shape[1] - (num_feats - 1 + add_constant_instr)
     for instr_id in range(num_zs):
@@ -61,8 +58,7 @@ def run_nonparametric_estimator():
     # logger.info('Starting experiment {0} for T={1} and J={2}'.format(exp_iter, num_markets, num_prods))
     N = num_markets * n
     add_constant_instr = int(no_purch_const > 0)
-    observed_ms, prod_feats_offered, W, instruments = compute_variables_from_expt_file(
-        file_name, no_purch_const, XI_ZERO_MEAN, num_feats)
+    observed_ms, prod_feats_offered, W, instruments = compute_variables_from_expt_file(file_name, no_purch_const, num_feats)
     eigvals, eigenvectors = eigh(W)
     mean_correct_matrix = np.eye(N) - np.ones((N, N)) / N
     if XI_ZERO_MEAN:
@@ -104,10 +100,8 @@ def run_nonparametric_estimator():
                                         expt_id_iter, init_coefs, init_demand_shocks, init_mix_props)
 
 
-
 def compute_metrics():         
-    train_shares, train_prod_feats_offered, W_more, instruments = compute_variables_from_expt_file(
-        file_name, no_purch_const, XI_ZERO_MEAN, num_feats)  
+    train_shares, train_prod_feats_offered, W_more, instruments = compute_variables_from_expt_file(file_name, no_purch_const, num_feats)
     membership = np.ones((num_markets, num_prods + 1), dtype=np.int)  
     FEATURE_INDEX = -1
     N = num_markets*num_prods
@@ -169,7 +163,6 @@ def compute_metrics():
 
     return price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3
     
-
 
 if __name__ == "__main__":        
     run_nonparametric_estimator()

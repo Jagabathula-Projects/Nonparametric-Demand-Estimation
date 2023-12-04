@@ -1,21 +1,10 @@
-from scipy.optimize import minimize, fminbound, minimize_scalar, NonlinearConstraint, Bounds, line_search, lsq_linear, basinhopping, brute
-import time
+from scipy.optimize import minimize, fminbound, minimize_scalar, lsq_linear
 import multiprocessing as mp
 from IPython import embed
 from functools import partial
 import logging
-import numpy as np
-from sklearn.base import BaseEstimator
 from constants import *
-from scipy.spatial import ConvexHull
-import scipy
-from scipy.sparse import *
-from sklearn.utils import graph_shortest_path
-from copy import deepcopy
-from itertools import combinations
-import itertools
 from numpy.random import RandomState
-import sys
 import pickle
 from scipy.stats import multivariate_normal
 
@@ -27,9 +16,6 @@ formatter = logging.Formatter(
     '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-
-
-
 
 
 class LearnDistr(object):
