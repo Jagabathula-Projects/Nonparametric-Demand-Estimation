@@ -86,11 +86,11 @@ def run_nonparametric_estimator(file_name, num_feats):
                                       expt_id_iter, init_coefs, init_demand_shocks, init_mix_props)
 
     if ALGO_VARIANT.startswith('AltDesc'):
-        print('Starting run for G0 = {0} xi_per = {1}'.format(g0, xi_per_ub))
+        print('Starting run for G0 = {0} xi_per = {1}'.format(g0, xi_per))
 
         fw_blp_est = FrankWolfeMixedLogitBLPEstimator(LIKELIHOOD, 'corrective_{0}'.format(NUM_BETA_UPDATES),
                                                         'exact', gmm_obj_ub=g0, norm_ub_type=NORM_TYPE,
-                                                        num_xi_updates=NUM_XI_UPDATES, fixed_coef_ub=xi_per_ub,
+                                                        num_xi_updates=NUM_XI_UPDATES, fixed_coef_ub=xi_per,
                                                         do_away_steps=False)
         id_term = 'swap'
 
@@ -98,7 +98,7 @@ def run_nonparametric_estimator(file_name, num_feats):
         fw_blp_est.non_zero_eigenvectors = U[:, :num_non_zero_eigvals].T
         fw_blp_est.zero_eigenvectors = U[:, num_non_zero_eigvals:].T
 
-        expt_id_iter = 'Results_'+file_name+'_G0={0}_xi_per={1}_'.format(g0, xi_per_ub)
+        expt_id_iter = 'Results_'+file_name+'_G0={0}_xi_per={1}_'.format(g0, xi_per)
         expt_id_iter += id_term
 
         fw_blp_est.fit_to_choice_data(membership, prod_feats_offered, observed_ms, gmm_matrix, instruments, W, num_FW_iterations, 0,
@@ -117,7 +117,7 @@ def compute_metrics(file_name ):
         exp_file = file_path_results + f'Results_no_xi_{file_name}_BLPestimator_variant=corrective_subprob_type=ignore_away_xi_steps=False_iter=0_R={num_FW_iterations}.stats'
 
     if ALGO_VARIANT.startswith('AltDesc'):
-        exp_file = file_path_results+f'Results_{file_name}_G0={g0}_xi_per={xi_per_ub}__swap_BLPestimator_variant=corrective_1_subprob_type=exact_away_xi_steps=False_iter=0_R={num_FW_iterations}.stats'
+        exp_file = file_path_results+f'Results_{file_name}_G0={g0}_xi_per={xi_per}__swap_BLPestimator_variant=corrective_1_subprob_type=exact_away_xi_steps=False_iter=0_R={num_FW_iterations}.stats'
         
     mix_props_iter, coefs_iter, gmm_obj_iter, kldiv_iter, demand_shocks_iter = pickle.load(open(exp_file, 'rb'))
         

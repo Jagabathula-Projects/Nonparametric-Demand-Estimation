@@ -23,9 +23,6 @@ NORM_TYPE = 'l2'
 DEMAND_SHOCKS_MAX = 1
 no_purch_const = 0
 
-xi_per_ub = 0.5
-g0 = 0.0
-
 
 XI_ZERO_MEAN = False
 NUM_BETA_UPDATES = 1
@@ -37,11 +34,6 @@ PRICE_CHANGE_PERCENT_1 = 1.0
 PRICE_CHANGE_PERCENT_2 = 5.0
 PRICE_CHANGE_PERCENT_3 = 10.0
 
-
-#  ALGO_VARIANT AltDesc refers to the nonparametric estimator in the paper "Nonparametric demand estimation in the presence of unobserved factors."
-#  ALGO_VARIANT IgnoreUF refers to the nonparametric estimator ignoring the unobserved factors proposed in the paper "A Conditional Gradient Approach for Nonparametric Estimation of Mixing Distributions."
-ALGO_VARIANT = 'AltDesc'
-# ALGO_VARIANT = 'IgnoreUF'
 
 # Directory that contains the input data file
 file_path_data = ''
@@ -57,3 +49,16 @@ num_markets = 400
 num_prods = 25
 
 NOPURCHSHOCKS = np.zeros(num_markets)[:, np.newaxis]
+
+
+#  ALGO_VARIANT AltDesc refers to the nonparametric estimator in the paper "Nonparametric demand estimation in the presence of unobserved factors."
+#  ALGO_VARIANT IgnoreUF refers to the nonparametric estimator ignoring the unobserved factors proposed in the paper "A Conditional Gradient Approach for Nonparametric Estimation of Mixing Distributions."
+ALGO_VARIANT = 'AltDesc'
+# ALGO_VARIANT = 'IgnoreUF'
+
+# Hyperparameters corrosponding to ALGO_VARIANT = 'AltDesc'  
+# g0 = 0.0 and xi_per = 0.5 are the default values, but they must be tuned based on the application.
+g0 = 0.0
+xi_per = 0.5
+
+
