@@ -1,5 +1,5 @@
 # Nonparametric Demand Estimation
-Code implementing the nonparametric estimator for demand estimation in the presence of unobserved factors proposed in the [Nonparametric demand estimation in the presence of unobserved factors](https://ssrn.com/abstract=4244086) paper.
+Code implementing the nonparametric estimator proposed in the [Nonparametric demand estimation in the presence of unobserved factors](https://ssrn.com/abstract=4244086) paper.
 
 ## How to run
 Modify the following variables in the `constants.py` file as required. Refer to the comments in the file for variable descriptions. 
@@ -8,11 +8,11 @@ Modify the following variables in the `constants.py` file as required. Refer to 
 `file_path_data`, \
 `file_name`, \
 `num_feats`, \
-`num_markets`,\ 
-`num_prods`,\
+`num_markets`, \ 
+`num_prods`, \
 `ALGO_VARIANT`
 
-The input data file should contain the following columns, arranged in the same order. For an example, refer to the Sample_data.csv file.
+The input data file should contain the following columns, arranged in the same order (this is the same format used in the PyBLP estimator of Conlon and Gortmaker). For an example, refer to the Sample_data.csv file.
 
 `market_ids`, \
 `product_ids`, \
@@ -26,7 +26,7 @@ Run the file `nonparametric_experiments.py` that contains two functions: `run_no
 ### 1. `run_nonparametric_estimator(file_name, num_feats)`
 This function runs a nonparametric estimator on market data by taking `file_name` and `num_feats` as inputs. It first calls the `compute_variables_from_expt_file` function to process the input data file and generate market shares, product features, and instruments in the required format. 
 
-It then fits a `FrankWolfeMixedLogitBLPEstimator` object for estimation and saves the output in the `file_path_results` directory. The output is a pickle file that contains mixing proportions corresponding to the coefficients, the coefficients, GMM objective, KL divergence, and the demand shocks.
+It then fits a `FrankWolfeMixedLogitBLPEstimator` object for estimation and saves the output in the `file_path_results` directory. The output is a pickle file that contains the estimated random coefficients and their mixing proportions, the unobserved factors (aka demand shokcs), the KL divergence loss and the GMM objective value at the estimated model parameters.
 
 ### 2. `compute_metrics(file_name)`
 This function computes the following post-estimation in-sample and out-of-sample metrics:
