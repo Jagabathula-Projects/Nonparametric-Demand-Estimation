@@ -43,8 +43,8 @@ NOPURCHSHOCKS = np.zeros(num_markets)[:, np.newaxis]
 
 #  ALGO_VARIANT AltDesc refers to the nonparametric estimator in the paper "Nonparametric demand estimation in the presence of unobserved factors."
 #  ALGO_VARIANT IgnoreUF refers to the nonparametric estimator ignoring the unobserved factors proposed in the paper "A Conditional Gradient Approach for Nonparametric Estimation of Mixing Distributions."
-ALGO_VARIANT = 'AltDesc'
-# ALGO_VARIANT = 'IgnoreUF'
+# ALGO_VARIANT = 'AltDesc'
+ALGO_VARIANT = 'IgnoreUF'
 
 # Hyperparameters corresponding to ALGO_VARIANT = 'AltDesc'
 # g0 = 0.0 and xi_per = 0.5 are the default values, but they must be tuned based on the application.
@@ -52,5 +52,5 @@ g0 = 0.0
 xi_per = 0.5
 
 # Number of iterations to run for the corresponding algorithms
-num_iterations_IgnoreUF = 50
+num_iterations_IgnoreUF = 10
 num_iterations_AltDesc = 10

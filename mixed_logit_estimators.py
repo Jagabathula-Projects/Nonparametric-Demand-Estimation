@@ -203,7 +203,6 @@ class FrankWolfeMixedLogitBLPEstimator(LearnDistr):
         prod_wt = np.exp(prod_utils)
         probs = membership * prod_wt
         row_sums = np.sum(probs, 1)
-        # these two lines taken from Srikanth
         non_empty_assorts = (row_sums != 0)
         row_sums[~non_empty_assorts] = 1
         probs = probs / row_sums[:, np.newaxis]
@@ -284,64 +283,6 @@ class FrankWolfeMixedLogitBLPEstimator(LearnDistr):
             price_elasticities_by_market[:, prod] = np.ravel(price_elas_prod)
 
         return price_elasticities_by_market
-
-
-
-    # # predict choice probabilities of chosen products under current mixture parameters
-    # def predict_choice_proba(self, mixture_weights, mixture_params, membership, prod_feats_offered, demand_shocks):
-    #     probs = np.zeros_like(membership, dtype=np.float)
-    #     num_support = mixture_weights.shape[0]
-    #     num_offersets, num_prods = membership.shape
-    #     component_market_shares = np.zeros((num_support, num_offersets, num_prods))
-    #     for k in range(num_support):
-    #         component_market_shares[k] = self._predict_MNL_proba_blp(membership, prod_feats_offered, mixture_params[k], demand_shocks)
-    #         probs += mixture_weights[k] * component_market_shares[k]
-
-    #     return probs, component_market_shares
-
-    # # external function for consistent usage
-    # def predict_proba(self, membership, prod_feats_offered):
-    #     choice_probs = np.zeros_like(membership, dtype=np.float)
-    #     for k in range(self.mix_props.shape[0]):
-    #         choice_probs += self.mix_props[k] * self._predict_MNL_proba_blp(membership, prod_feats_offered, self.coefs_[k], self.demand_shocks)
-
-    #     return choice_probs
-
-
-    # def compute_own_price_elasticities(self, membership, features, feature_index=-1):
-    #     prices = features[feature_index]
-    #     curr_probs, component_market_shares = self.predict_choice_proba(self.mix_props, self.coefs_, membership, features, self.demand_shocks)
-    #     skjt = component_market_shares[:, :, 1:]
-    #     mix_props_tensor = self.mix_props[:, np.newaxis, np.newaxis]
-    #     est_price_betas = mix_props_tensor*self.coefs_[:, :, [feature_index]]
-    #     dshare_price = np.sum(est_price_betas*skjt*(1-skjt), axis=0)
-    #     est_prod_shares = np.sum(mix_props_tensor*skjt, 0)
-    #     est_own_price_elast = (prices[:, 1:]/est_prod_shares)*dshare_price
-    #     # est_own_price_elast = (prices[:, 1:]/observed_ms[:, 1:])*dshare_price
-    #     logger.debug('Estimated own-price elasticities: %s', est_own_price_elast)
-    #     return np.ravel(est_own_price_elast)
-
-    # def compute_price_elasticities(self, membership, features, feature_index=-1):
-    #     # stack JxJ matrices on top of each other like PyBLP
-    #     price_elasticities_by_market = np.zeros((num_prods*num_markets, num_prods))
-    #     prices = features[feature_index][:, 1:]
-    #     curr_probs, component_market_shares = self.predict_choice_proba(self.mix_props, self.coefs_, membership, features, self.demand_shocks)
-    #     skjt = component_market_shares[:, :, 1:]
-    #     est_prod_shares = curr_probs[:, 1:]
-    #     mix_props_tensor = self.mix_props[:, np.newaxis, np.newaxis]
-    #     est_price_betas = mix_props_tensor*self.coefs_[:, :, [feature_index]]
-    #     # est_price_betas = self.mix_props*self.coefs_[:, feature_index]
-    #     dshare_price_own = np.sum(est_price_betas * skjt * (1 - skjt), axis=0)
-    #     for prod in range(num_prods): # populate the columns of price_elasticities_by_market
-    #         # compute d(sjt)/d(plt) for all j \neq l, where prod corresponds to l
-    #         dshare_price_other = np.sum(-est_price_betas * skjt * skjt[:, :, [prod]], axis=0)
-    #         price_elas_prod = (prices[:, [prod]]/est_prod_shares)*dshare_price_other
-    #         price_elas_prod[:, prod] = (prices[:, prod]/est_prod_shares[:, prod])*dshare_price_own[:, prod]
-    #         price_elasticities_by_market[:, prod] = np.ravel(price_elas_prod)
-
-    #     return price_elasticities_by_market
-
-
 
 
     def compute_diversion_ratios(self, membership, features, feature_index=-1):
@@ -701,11 +642,6 @@ class FrankWolfeMixedLogitBLPEstimator(LearnDistr):
             # print('Working on iter {0}'.format((nupd)))
 
         return curr_probs
-    # ==================================================================================================
-    # FUNCTIONS FOR PERFORMING CORRECTIVE VARIANTS of FRANK-WOLFE
-    # ==================================================================================================
-
-    ## FIRST METHOD : Again run a frank-wolfe to solve the correction problem, equivalent to optimizing over the simplex
 
     # helper method to check if current solution lies within convex hull of vertices
     def _check_convex_combination(self, xk, alphas, vertices):
@@ -794,11 +730,7 @@ class FrankWolfeMixedLogitBLPEstimator(LearnDistr):
         alphas = curr_alphas + gamma*next_alphas_dir
         return self.compute_optimization_objective(self.predict_choice_proba(alphas, self.coefs_, membership, prod_feats_offered, fixed_coef)[0], n_counts)
 
-    # ================================================
-    # MAIN FRANK - WOLFE CODE
-    # ================================================
-
-    # outer wrapper for learning LC-MNL model from choice data
+    # outer wrapper for fitting the model to aggregate sales data
     def fit_to_choice_data(self, X_obs, F_obs, Sales_obs, gmm_matrix, instruments, W, num_iter, exp_iter, expt_id, init_betas=None, init_shocks=None, init_mix_props=None):
         '''
         X_obs: T x (J+1) membership array where T is number of markets/offer-sets and J is num prods

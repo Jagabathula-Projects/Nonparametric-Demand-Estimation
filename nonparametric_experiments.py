@@ -1,4 +1,3 @@
-import sys
 from mixed_logit_estimators import FrankWolfeMixedLogitBLPEstimator
 from constants import *
 import pickle
@@ -107,10 +106,10 @@ def compute_metrics():
     N = num_markets*num_prods
 
     if ALGO_VARIANT.startswith('IgnoreUF'):
-        exp_file = file_path_results + f'Results_no_xi_{file_name}_BLPestimator_variant=corrective_subprob_type=ignore_away_xi_steps=False_iter=0_R={num_FW_iterations}.stats'
+        exp_file = file_path_results + f'Results_no_xi_{file_name}_BLPestimator_variant=corrective_subprob_type=ignore_away_xi_steps=False_iter=0_R={num_iterations_IgnoreUF}.stats'
 
     if ALGO_VARIANT.startswith('AltDesc'):
-        exp_file = file_path_results+f'Results_{file_name}_G0={g0}_xi_per={xi_per}__swap_BLPestimator_variant=corrective_1_subprob_type=exact_away_xi_steps=False_iter=0_R={num_FW_iterations}.stats'
+        exp_file = file_path_results+f'Results_{file_name}_G0={g0}_xi_per={xi_per}_swap_BLPestimator_variant=corrective_1_subprob_type=exact_away_xi_steps=False_iter=0_R={num_iterations_AltDesc}.stats'
         
     mix_props_iter, coefs_iter, gmm_obj_iter, kldiv_iter, demand_shocks_iter = pickle.load(open(exp_file, 'rb'))
         
@@ -130,8 +129,8 @@ def compute_metrics():
     dummy_est.demand_shocks = demand_shocks_iter
 
     #train price elasticities
-    price_elas_train = dummy_est.compute_price_elasticities(membership, train_prod_feats_offered, FEATURE_INDEX)
-    own_price_elas_train = price_elas_train[range(N), list(range(num_prods))*num_markets]
+    all_price_elas_train = dummy_est.compute_price_elasticities(membership, train_prod_feats_offered, FEATURE_INDEX)
+    own_price_elas_train = all_price_elas_train[range(N), list(range(num_prods))*num_markets]
     train_pred_shares = dummy_est.predict_proba(membership, train_prod_feats_offered)
 
     ############### test market share prediction at 1% price change
@@ -161,11 +160,10 @@ def compute_metrics():
 
     test_pred_shares_3 = dummy_est.predict_proba(membership, test_prod_feats_offered_3)
 
-    return price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3
+    return all_price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3
     
 
 if __name__ == "__main__":        
     run_nonparametric_estimator()
     price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3 = compute_metrics()
-
 
