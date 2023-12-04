@@ -1,4 +1,4 @@
-# NonparamDemandEstimation
+# Nonparametric Demand Estimation
 Code implementing the nonparametric estimator for demand estimation in the presence of unobserved factors proposed in the [Nonparametric demand estimation in the presence of unobserved factors](https://ssrn.com/abstract=4244086) paper.
 
 ## How to run
