@@ -24,7 +24,6 @@ logger.addHandler(handler)
 prng = RandomState(1244)
 
 def compute_variables_from_expt_file(file_name, no_purchase_const, xi_bar_in_constraint, num_feats):
-    # TODO: change filepath
     data_df = pd.read_csv(file_path_data + file_name+'.csv')
     observed_ms = data_df['shares'].values.reshape((num_markets, -1))
     nopurch_shares = 1 - np.sum(observed_ms, 1, keepdims=True)

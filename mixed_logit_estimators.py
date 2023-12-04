@@ -897,7 +897,6 @@ class FrankWolfeMixedLogitBLPEstimator(LearnDistr):
         logger.info('Final KL divergence for run {1} is {0} after adding {2} types'.format(final_kldiv, exp_iter, num_components_added))
         zetas_Z = np.dot(np.ravel(self.demand_shocks[:, 1:]), instruments)
         final_gmm_obj = np.linalg.multi_dot([zetas_Z, W, zetas_Z])
-        # TODO: change filepath
         pickle.dump((self.mix_props, self.coefs_, final_gmm_obj, final_kldiv, self.demand_shocks), open(
             file_path_results+'{0}_BLPestimator_variant={3}_subprob_type={4}_away_xi_steps={5}_iter={1}_R={2}.stats'.format(expt_id, exp_iter, num_iter,
                                                                                                  self.fwVariant, self.subprob_type, self.do_away_steps), 'wb'))
