@@ -45,7 +45,7 @@ The code has been tested with the following (main) dependencies:
 python                    3.8.5\
 numpy                     1.20.1\
 pandas                    1.2.2\
-scikit-learn              0.24.1\
-scipy                     1.10.
+scipy                     1.10 \
+ipython                   7.21.0
 
 We conducted tests on this code using a High-Performance Computing (HPC) system equipped with 64GB of CPU memory. Given the memory-intensive nature of the code, we recommend running it on an HPC environment for optimal performance.

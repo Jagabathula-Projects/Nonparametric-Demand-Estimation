@@ -132,6 +132,7 @@ def compute_metrics():
     all_price_elas_train = dummy_est.compute_price_elasticities(membership, train_prod_feats_offered, FEATURE_INDEX)
     own_price_elas_train = all_price_elas_train[range(N), list(range(num_prods))*num_markets]
     train_pred_shares = dummy_est.predict_proba(membership, train_prod_feats_offered)
+    train_pred_shares = train_pred_shares[:, 1:].reshape((-1, 1))
 
     ############### test market share prediction at 1% price change
     test_prod_feats_offered_1 = deepcopy(train_prod_feats_offered)
@@ -141,6 +142,7 @@ def compute_metrics():
             1 + PRICE_CHANGE_PERCENT_1)
 
     test_pred_shares_1 = dummy_est.predict_proba(membership, test_prod_feats_offered_1)
+    test_pred_shares_1 = test_pred_shares_1[:, 1:].reshape((-1, 1))
 
     ############### test market share prediction at 5% price change
     test_prod_feats_offered_2 = deepcopy(train_prod_feats_offered)
@@ -150,6 +152,7 @@ def compute_metrics():
             1 + PRICE_CHANGE_PERCENT_2)
 
     test_pred_shares_2 = dummy_est.predict_proba(membership, test_prod_feats_offered_2)
+    test_pred_shares_2 = test_pred_shares_2[:, 1:].reshape((-1, 1))
     
     ############### test market share prediction at 10% price change
     test_prod_feats_offered_3 = deepcopy(train_prod_feats_offered)
@@ -159,6 +162,7 @@ def compute_metrics():
             1 + PRICE_CHANGE_PERCENT_3)
 
     test_pred_shares_3 = dummy_est.predict_proba(membership, test_prod_feats_offered_3)
+    test_pred_shares_3 = test_pred_shares_3[:, 1:].reshape((-1, 1))
 
     return all_price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3
     
@@ -166,4 +170,4 @@ def compute_metrics():
 if __name__ == "__main__":        
     run_nonparametric_estimator()
     price_elas_train, own_price_elas_train, train_pred_shares, test_pred_shares_1, test_pred_shares_2, test_pred_shares_3 = compute_metrics()
-
+    # Predicted shares are presented as a column vector, arranged in the same order as in the input file.
